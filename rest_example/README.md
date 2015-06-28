@@ -1,12 +1,12 @@
 # A REST service example
 
-A simple REST server + simple client scripts to test the logging.
+A simple lua REST API + simple client scripts to test the logging.
 
 ## Usage
-- requires Ruby
-- install the gems
-- `rackup` to start the server, default port is 9292
-- scripts are in [scripts](scripts) directory
+- requires Lua and [orbit](http://keplerproject.github.io/orbit/)
+- run `orbit -p 9292 rest_example.lua`
+- install nginx_service_logging_lua in nginx and aim it a port 9292
+- try the scripts in [scripts](scripts)
 
 ## License
 

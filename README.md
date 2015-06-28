@@ -38,7 +38,7 @@ WARNING: Currently a work in progress prototype, use at your own risks.
 
 ## Try it
 
-The [rest_example](rest_example) directory contains a Ruby REST application that can be used to test the REST functionalities.
+The [rest_example](rest_example) directory contains a Lua REST application that can be used to test the REST functionalities.
 
 ## Resources :
 - http://wiki.nginx.org/HttpLuaModule
