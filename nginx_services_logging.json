@@ -1,0 +1,19 @@
+{
+  "correlationId": "X-Correlation-Id",
+  "forceCorrelationId": false,
+  "services": {
+  	"rest": [
+  		{
+        "name": "post_json_ok",
+  			"uri": "/json/ok",
+  			"method": "POST",
+  			"params": [
+  				{
+  					"name": "key_name",
+  					"path": "key"
+  				}
+  			]
+  		}
+  	]
+  }
+}
