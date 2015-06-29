@@ -7,19 +7,25 @@ Example :
 ```json
 {
   "services": {
-  	"rest": [
-  		{
+    "rest": [
+      {
         "name": "post_json_ok",
-  			"uri": "/json/ok",
-  			"method": "POST",
-  			"params": [
-  				{
-  					"name": "key_name",
-  					"path": "key"
-  				}
-  			]
-  		}
-  	]
+        "uri": "/json/ok",
+        "method": "POST",
+        "request": [
+          {
+            "name": "key_name",
+            "path": "key"
+          }
+        ],
+        "response": [
+          {
+            "name": "code_name",
+            "path": "code"
+          }
+        ]
+      }
+    ]
   }
 }
 ```
