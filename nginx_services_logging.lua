@@ -1,3 +1,10 @@
+-- required to process json
+cjson = require("cjson")
+
+-- required for uuid
+uuid = require("uuid")
+uuid.randomseed(ngx.now())
+
 -- Rest services
 local RestServiceLogging = {}
 RestServiceLogging.__index = RestServiceLogging
@@ -148,8 +155,8 @@ function NginxServicesLogging.after_call(self)
         end
         message = message .. logging_service.description .. cjson.encode(ngx.ctx.before_call_result) .. " " .. cjson.encode(after_call_result)
         ngx.log(ngx.INFO, message)
-    elseif self.correlation_id then
-        ngx.log(ngx.DEBUG, "No service logging found " .. correlation_id)
+    elseif ngx.ctx.correlation_id then
+        ngx.log(ngx.DEBUG, "No service logging found " .. ngx.ctx.correlation_id)
     else
         ngx.log(ngx.DEBUG, "No service logging found")
     end
