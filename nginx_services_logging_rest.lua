@@ -20,9 +20,9 @@ function RestServiceLogging.new(configuration)
 end
 
 -- Check it the current call match the service
-function RestServiceLogging.match_current_call(self)
-    if ngx.req.get_method() == self.method then
-        if ngx.var.uri == self.uri then
+function RestServiceLogging.match_current_call(self, method, uri)
+    if method == self.method then
+        if uri == self.uri then
             return true
         end
     else
@@ -30,12 +30,12 @@ function RestServiceLogging.match_current_call(self)
     end
 end
 
-function RestServiceLogging.process_before_call(self)
+function RestServiceLogging.process_before_call(self, headers, content)
     return self:process_call(ngx.req.get_headers(), ngx.var.request_body, self.request)
 end
 
-function RestServiceLogging.process_after_call(self)
-    return self:process_call(ngx.resp.get_headers(), table.concat(ngx.ctx.buffered_content), self.response)
+function RestServiceLogging.process_after_call(self, headers, content)
+    return self:process_call(headers, content, self.response)
 end
 
 function RestServiceLogging.process_call(self, headers, raw_body, parameters)
