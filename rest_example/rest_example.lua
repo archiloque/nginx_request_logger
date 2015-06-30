@@ -16,7 +16,7 @@ function log(web)
     print(web.path_info .. " " .. web.method .. " " .. cjson.encode(web.input) .. " " .. cjson.encode(env_info))
 end
 
-function json_get_ok(web)
+function json_get_ok_1(web)
     log(web)
     web:content_type('application/json')
     return cjson.encode({ code = 1 })
@@ -59,7 +59,7 @@ end
 -- pass multiple patterns, and any captures get passed to
 -- the controller
 
-rest_example:dispatch_get(json_get_ok, "/json/ok")
+rest_example:dispatch_get(json_get_ok_1, "/json/ok/1")
 rest_example:dispatch_post(json_post_ok, "/json/ok")
 rest_example:dispatch_put(json_put_ok, "/json/ok")
 

@@ -49,9 +49,9 @@ function NginxServicesLogging.before_call(self)
         ngx.ctx.correlation_id = correlation_id
     end
 
-    local logging_service = self:find_logging_service()
+    local logging_service, match_result = self:find_logging_service()
     if logging_service then
-        local before_call_result = logging_service:process_before_call(ngx.req.get_headers(), ngx.var.request_body)
+        local before_call_result = logging_service:process_before_call(match_resul, ngx.req.get_headers(), ngx.var.request_body)
         if before_call_result then
             local message = "Service logging "
             if correlation_id then
@@ -101,9 +101,10 @@ end
 
 -- Find the logging service that match the current call
 function NginxServicesLogging.find_logging_service(self)
-    for index, logging_service in ipairs(self.logging_services) do
-        if logging_service:match_current_call(ngx.req.get_method(), ngx.var.uri) then
-            return logging_service
+    for _, logging_service in ipairs(self.logging_services) do
+        local match_result = logging_service:match_current_call(ngx.req.get_method(), ngx.var.uri, ngx.re)
+        if match_result then
+            return logging_service, match_result
         end
     end
     -- not found

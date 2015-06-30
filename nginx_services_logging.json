@@ -6,20 +6,43 @@
       {
         "name": "post_json_ok",
         "uri": "/json/ok",
-        "method": "POST",
+        "http_method": "POST",
         "request": [
           {
             "name": "key_name",
-            "path": "key"
+            "path": "key",
+            "type": "json_body"
           }
         ],
         "response": [
           {
             "name": "code_name",
-            "path": "code"
+            "path": "code",
+            "type": "json_body"
+          }
+        ]
+      },
+      {
+        "name": "post_json_get",
+        "uri": "\\\/json\\\/ok\\\/(\\d+)",
+        "uri_type": "regex",
+        "http_method": "GET",
+        "request": [
+          {
+            "name": "id",
+            "index": "0",
+            "type": "uri_regex"
+          }
+        ],
+        "response": [
+          {
+            "name": "code_name",
+            "path": "code",
+            "type": "json_body"
           }
         ]
       }
+
     ]
   }
 }
