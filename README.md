@@ -42,7 +42,7 @@ WARNING: Currently a work in progress prototype, use at your own risks.
 ## Requirements
 - Nginx with [HttpLuaModule](http://wiki.nginx.org/HttpLuaModule) and [Nginx Development Kit](https://github.com/simpl/ngx_devel_kit)
 - [uuid](https://github.com/Tieske/uuid)
-- [cjson](http://www.kyne.com.au/~mark/software/lua-cjson-manual.html)
+- [cjson](http://www.kyne.com.au/~mark/software/lua-cjson.php)
 
 ## Usage
 
