@@ -44,6 +44,14 @@ WARNING: Currently a work in progress prototype, use at your own risks.
 - [uuid](https://github.com/Tieske/uuid)
 - [cjson](http://www.kyne.com.au/~mark/software/lua-cjson.php)
 
+Under OSX if you use Homebrew, you can setup Nginx with :
+
+```bash
+brew install luajit --with-luarocks
+brew tap homebrew/nginx
+brew install nginx-full --with-lua-module
+```
+
 ## Usage
 
 - See [nginx_services_logging_configuration_rest.conf](nginx_services_logging_configuration_rest.conf) for the Nginx configuration
