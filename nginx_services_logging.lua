@@ -25,7 +25,7 @@ function NginxServicesLogging.new(configuration_path)
     -- read rest services configurations
     self.logging_services = {}
     if configuration['services'] and configuration['services']['rest'] and (next(configuration['services']['rest']) ~= nil) then
-        for index, service_configuration in ipairs(configuration['services']['rest']) do
+        for _, service_configuration in ipairs(configuration['services']['rest']) do
             table.insert(self.logging_services, RestServiceLogging.new(service_configuration))
         end
     end
