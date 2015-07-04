@@ -1,34 +1,59 @@
-# Nginx services logging
+# Nginx request logger
 
-Lua code to log services calls information in Nginx. It enables to specify witch parameters to logs in each services in a json file.
+Lua code to log request information in Nginx. For each URL you can specify witch parameter and reponse values to logs.
+
+Works for:
+- plain http requests
+- REST services
+
 
 Example :
 
 ```json
 {
-  "services": {
-    "rest": [
-      {
-        "name": "post_json_ok",
-        "uri": "/json/ok",
-        "method": "POST",
-        "request": [
-          {
-            "name": "key_name",
-            "path": "key"
-          }
-        ],
-        "response": [
-          {
-            "name": "code_name",
-            "path": "code"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
+  "correlationId": "X-Correlation-Id",
+  "forceCorrelationId": false,
+
+  "endpoints": [
+    {
+      "name": "post_json_ok",
+      "uri": "/json/ok",
+      "http_method": "POST",
+      "request": [
+        {
+          "name": "key_name",
+          "type": "json_body",
+          "path": "key"
+        },
+        {
+          "name": "special_header",
+          "type": "header",
+          "header_name": "X-SPECIAL-HEADER"
+        }
+      ],
+      "response": [
+        {
+          "name": "code_name",
+          "path": "code",
+          "type": "json_body"
+        }
+      ]
+    },
+    {
+      "name": "post_json_get",
+      "uri": "\\\/json\\\/ok\\\/(\\d+)",
+      "uri_type": "regex",
+      "http_method": "GET",
+      "request": [
+        {
+          "name": "id",
+          "match_index": 0,
+          "type": "uri_regex"
+        }
+      ]
+    }
+  ]
+}```
 
 Result
 ```
@@ -54,14 +79,15 @@ brew install nginx-full --with-lua-module
 
 ## Usage
 
-- See [nginx_services_logging_configuration_rest.conf](nginx_services_logging_configuration_rest.conf) for the Nginx configuration
-- See [nginx_services_logging.json](nginx_services_logging.json) for a detailed configuration example
+- See [nginx_request_logger_configuration.conf](nginx_request_logger_configuration.conf) for the Nginx configuration
+- See [nginx_request_logger.json](nginx_services_logging.json) for a detailed configuration example
 
 ## Try it
 
 The [rest_example](rest_example) directory contains a Lua REST application that can be used to test the REST functionalities.
 
 ## Resources :
+
 - http://wiki.nginx.org/HttpLuaModule
 - http://ryandlane.com/blog/2014/12/11/using-lua-in-nginx-for-unique-request-ids-and-millisecond-times-in-logs/
 
