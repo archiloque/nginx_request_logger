@@ -3,7 +3,7 @@
 local orbit = require("orbit")
 local cjson = require("cjson")
 
-module("rest_example", package.seeall, orbit.new)
+module("example", package.seeall, orbit.new)
 
 function log(web)
     local env_info = {}
@@ -59,12 +59,12 @@ end
 -- pass multiple patterns, and any captures get passed to
 -- the controller
 
-rest_example:dispatch_get(json_get_ok_1, "/json/ok/1")
-rest_example:dispatch_post(json_post_ok, "/json/ok")
-rest_example:dispatch_put(json_put_ok, "/json/ok")
+example:dispatch_get(json_get_ok_1, "/json/ok/1")
+example:dispatch_post(json_post_ok, "/json/ok")
+example:dispatch_put(json_put_ok, "/json/ok")
 
-rest_example:dispatch_get(json_get_ko, "/json/ko")
-rest_example:dispatch_post(json_post_ko, "/json/ko")
-rest_example:dispatch_put(json_put_ko, "/json/ko")
+example:dispatch_get(json_get_ko, "/json/ko")
+example:dispatch_post(json_post_ko, "/json/ko")
+example:dispatch_put(json_put_ko, "/json/ko")
 
 return _M

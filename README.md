@@ -66,6 +66,7 @@ Result
 WARNING: Currently a work in progress prototype, use at your own risks.
 
 ## Requirements
+
 - Nginx with [HttpLuaModule](http://wiki.nginx.org/HttpLuaModule) and [Nginx Development Kit](https://github.com/simpl/ngx_devel_kit)
 - [uuid](https://github.com/Tieske/uuid)
 - [cjson](http://www.kyne.com.au/~mark/software/lua-cjson.php)
@@ -85,7 +86,7 @@ brew install nginx-full --with-lua-module
 
 ## Try it
 
-The [rest_example](rest_example) directory contains a Lua REST application that can be used to test the REST functionalities.
+The [example](example) directory contains a Lua application that can be used to try the scripts.
 
 ## Resources :
 
