@@ -114,10 +114,15 @@ brew install nginx-full --with-lua-module
 
 ## Configuration
 
+|Parameter Name|Description|
+|-----|---------------------|
+|`correlationId`|Add a correlation id in the request headers using this name.|
+|`forceCorrelationId`|Force a new correlation id even if there is already one, to be used when the server is facing the internet to avoid any risk of the clients messing up with us.|
+
 ### Request
 
 |Type|Parameter|Description|
------|---------|----------
+|-----|---------|----------|
 |`uri_regex`|`match_index`|Used to fetch matching result when using a `regex` uri type, 0 is the first matched element.|
 |`post_arg`|`parameter_name`|Arguments in a POST http request|
 |`json_body`|`path`|Parse the body as JSON, and extract the content at this path|
@@ -129,7 +134,7 @@ WARNING: to use `json_body` or `post_arg` you must enable `lua_need_request_body
 ### Response
 
 |Type|Parameter|Description|
------|---------|----------
+|-----|---------|----------|
 |`json_body`|`path`|Parse the body as JSON, and extract the content at this path|
 |`header`|`header_name`|Header name|
 

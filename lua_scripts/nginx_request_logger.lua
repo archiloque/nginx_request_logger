@@ -24,6 +24,10 @@ function NginxRequestLogger.new(configuration_path)
     if self.correlation_id then
         ngx.log(ngx.INFO, "Correlation id enabled and will use header [" .. self.correlation_id .. "]")
     end
+    self.force_correlation_id = configuration['forceCorrelationId']
+    if self.force_correlation_id then
+        ngx.log(ngx.INFO, "Force correlation id is enabled")
+    end
 
     self.endpoints = {}
     if configuration['endpoints'] and (next(configuration['endpoints']) ~= nil) then
@@ -50,9 +54,12 @@ end
 
 function NginxRequestLogger.before_call(self)
     if self.correlation_id then
-        local correlation_id = uuid()
-        ngx.req.set_header(self.correlation_id, correlation_id)
-        ngx.ctx.correlation_id = correlation_id
+        local skip_correlation_id = ngx.req.get_headers()[self.correlation_id] and (not self.force_correlation_id)
+        if not skip_correlation_id then
+            local correlation_id = uuid()
+            ngx.req.set_header(self.correlation_id, correlation_id)
+            ngx.ctx.correlation_id = correlation_id
+        end
     end
 
     local endpoint, match_result = self:find_endpoint()
