@@ -1,3 +1,4 @@
+local NginxRequestLoggerHelper = require("nginx_request_logger_helper")
 local HttpRequestElementConfiguration = require("nginx_request_logger_http_request_element_configuration")
 local HttpResponseElementConfiguration = require("nginx_request_logger_http_response_element_configuration")
 
@@ -9,7 +10,7 @@ function EndpointConfiguration.new(configuration)
     local self = setmetatable({}, EndpointConfiguration)
 
     if configuration.name == nill then
-        error("Service without name " .. cjson.encode(configuration))
+        error("Endpoint without name " .. cjson.encode(configuration))
     end
     self.name = configuration.name
 
@@ -40,7 +41,7 @@ function EndpointConfiguration.read_uri_type(self, configuration)
         if valid_uri_types[uri_type] then
             return uri_type
         else
-            error("Unknown uri type [" .. uri_type .. "] valid values are " .. table.concat(valid_uri_types, " ") .. " for service " .. self.name)
+            error("Unknown uri type [" .. uri_type .. "] valid values are " .. NginxRequestLoggerHelper.concat_table_keys(valid_uri_types, " ") .. " for service " .. self.name)
         end
     else
         return "plain"

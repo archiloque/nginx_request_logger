@@ -3,6 +3,7 @@ package.path = package.path .. ";../lua_scripts/?.lua"
 luaunit = require('luaunit')
 cjson = require("cjson")
 
+EndpointConfiguration = require('nginx_request_logger_endpoint_configuration')
 HttpRequestElementConfiguration = require('nginx_request_logger_http_request_element_configuration')
 HttpResponseElementConfiguration = require('nginx_request_logger_http_response_element_configuration')
 
@@ -103,6 +104,23 @@ function TestHttpResponseElementConfiguration:testHeader()
     luaunit.assertEquals("header", config.type)
     luaunit.assertEquals("response_name", config.name)
     luaunit.assertEquals({ name = "response_name", type = "header", header_name = "name" }, config.configuration)
+end
+
+TestEndpointConfiguration = {}
+
+function TestEndpointConfiguration:testNoName()
+    luaunit.assertErrorMsgContains("Endpoint without name {}",
+        EndpointConfiguration.new, {})
+end
+
+function TestEndpointConfiguration:testNoUri()
+    luaunit.assertErrorMsgContains("No uri for service endpoint_name",
+        EndpointConfiguration.new, {name = "endpoint_name"})
+end
+
+function TestEndpointConfiguration:testBadUriType()
+    luaunit.assertErrorMsgContains("Unknown uri type [wrong_uri_type] valid values are regex plain for service endpoint_name",
+        EndpointConfiguration.new, {name = "endpoint_name", uri = "", uri_type = "wrong_uri_type"})
 end
 
 os.exit(luaunit.LuaUnit.run())

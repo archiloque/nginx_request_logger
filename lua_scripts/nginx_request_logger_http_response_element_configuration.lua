@@ -14,7 +14,7 @@ function HttpResponseElementConfiguration.new(endpoint_configuration, response_e
 
     self.type = self:read_element_type(response_element_configuration)
 
-    self:read_response_element_configuration(endpoint_configuration, response_element_configuration)
+    self:read_response_element_configuration(response_element_configuration)
 
     self.configuration = response_element_configuration
 
@@ -34,29 +34,19 @@ function HttpResponseElementConfiguration.read_element_type(self, response_eleme
     end
 end
 
-function HttpResponseElementConfiguration.read_response_element_configuration(self, endpoint_configuration, response_element_configuration)
+function HttpResponseElementConfiguration.read_response_element_configuration(self, response_element_configuration)
     local response_type = self.type
     if response_type == "header" then
-        self:read_header(response_element_configuration)
+        self:check_param_is_missing(response_element_configuration, "header_name")
     elseif response_type == "json_body" then
-        self:read_json_body(response_element_configuration)
+        self:check_param_is_missing(response_element_configuration, "path")
     else
         error("Unknown response type [" .. response_type .. "]")
     end
 end
 
-function HttpResponseElementConfiguration.error_if_response_param_is_missing(self, response_element_configuration, param_name)
-    if response_element_configuration[param_name] == nill then
-        error("Missing " .. param_name .. " parameter for response parameter " .. self.name .. " " .. cjson.encode(response_element_configuration))
-    end
-end
-
-function HttpResponseElementConfiguration.read_header(self, response_element_configuration)
-    self:error_if_response_param_is_missing(response_element_configuration, "header_name")
-end
-
-function HttpResponseElementConfiguration.read_json_body(self, response_element_configuration)
-    self:error_if_response_param_is_missing(response_element_configuration, "path")
+function HttpResponseElementConfiguration.check_param_is_missing(self, response_element_configuration, param_name)
+    NginxRequestLoggerHelper.error_if_param_is_missing(self.name, "response", response_element_configuration, param_name)
 end
 
 return HttpResponseElementConfiguration
