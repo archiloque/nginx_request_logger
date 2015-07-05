@@ -120,7 +120,82 @@ end
 
 function TestEndpointConfiguration:testBadUriType()
     luaunit.assertErrorMsgContains("Unknown uri type [wrong_uri_type] valid values are regex plain for service endpoint_name",
-        EndpointConfiguration.new, {name = "endpoint_name", uri = "", uri_type = "wrong_uri_type"})
+        EndpointConfiguration.new, { name = "endpoint_name", uri = "/service", uri_type = "wrong_uri_type" })
+end
+
+function TestEndpointConfiguration:testDefaultValues()
+    local endpoint_configuration = EndpointConfiguration.new({ name = "endpoint_name", uri = "/service" })
+    luaunit.assertEquals("endpoint_name", endpoint_configuration.name)
+    luaunit.assertEquals("plain", endpoint_configuration.uri_type)
+    luaunit.assertEquals("/service", endpoint_configuration.uri)
+    luaunit.assertEquals("GET", endpoint_configuration.http_method)
+end
+
+function TestEndpointConfiguration:testRegexUtiType()
+    local endpoint_configuration = EndpointConfiguration.new({ name = "endpoint_name", uri = "/service", uri_type = "regex" })
+    luaunit.assertEquals("endpoint_name", endpoint_configuration.name)
+    luaunit.assertEquals("regex", endpoint_configuration.uri_type)
+    luaunit.assertEquals("/service", endpoint_configuration.uri)
+    luaunit.assertEquals("GET", endpoint_configuration.http_method)
+end
+
+function TestEndpointConfiguration:testHttpMethod()
+    local endpoint_configuration = EndpointConfiguration.new({ name = "endpoint_name", uri = "/service", http_method = "POST" })
+    luaunit.assertEquals("endpoint_name", endpoint_configuration.name)
+    luaunit.assertEquals("plain", endpoint_configuration.uri_type)
+    luaunit.assertEquals("/service", endpoint_configuration.uri)
+    luaunit.assertEquals("POST", endpoint_configuration.http_method)
+end
+
+function TestEndpointConfiguration:testDuplicateRequest()
+    local request_parameter = { name = "request", type = "header", header_name = "header_name" }
+    local parameters = {
+        name = "endpoint_name",
+        uri = "/service",
+        request = {
+            request_parameter,
+            request_parameter
+        }
+    }
+    luaunit.assertErrorMsgContains("Duplicated request name [request] for service endpoint_name",
+        EndpointConfiguration.new, parameters)
+end
+
+function TestEndpointConfiguration:testDuplicateResponse()
+    local response_parameter = { name = "response", type = "header", header_name = "header_name" }
+    local parameters = {
+        name = "endpoint_name",
+        uri = "/service",
+        response = {
+            response_parameter,
+            response_parameter
+        }
+    }
+    luaunit.assertErrorMsgContains("Duplicated response name [response] for service endpoint_name",
+        EndpointConfiguration.new, parameters)
+end
+
+function TestEndpointConfiguration:testRequestAndResponse()
+    local parameters = {
+        name = "endpoint_name",
+        uri = "/service",
+        request = {
+            { name = "request", type = "header", header_name = "request_header_name" }
+        },
+        response = {
+            { name = "response", type = "header", header_name = "response_header_name" },
+            response_parameter
+        }
+    }
+    local endpoint_configuration = EndpointConfiguration.new(parameters)
+
+    luaunit.assertEquals(1, table.getn(endpoint_configuration.request))
+    local request = endpoint_configuration.request[1]
+    luaunit.assertEquals("request", request.name)
+
+    luaunit.assertEquals(1, table.getn(endpoint_configuration.response))
+    local response = endpoint_configuration.response[1]
+    luaunit.assertEquals("response", response.name)
 end
 
 os.exit(luaunit.LuaUnit.run())

@@ -56,7 +56,7 @@ function EndpointConfiguration.process_configuration(self, configuration, elemen
         if elements_names[element_configuration.name] then
             error("Duplicated " .. element_type .. " name [" .. element_configuration.name .. "] for service " .. self.name)
         end
-        table.insert(elements_names, element_configuration.name)
+        elements_names[element_configuration.name] = true
         table.insert(elements, element_configuration)
     end
     return elements
