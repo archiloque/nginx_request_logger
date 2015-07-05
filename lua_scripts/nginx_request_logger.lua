@@ -8,6 +8,7 @@ uuid = require("uuid")
 uuid.randomseed(ngx.now())
 
 local EndpointConfiguration = require("nginx_request_logger_endpoint_configuration")
+local HttpEndpoint = require("nginx_request_logger_http_endpoint")
 
 local NginxRequestLogger = {}
 NginxRequestLogger.__index = NginxRequestLogger
@@ -27,7 +28,8 @@ function NginxRequestLogger.new(configuration_path)
     self.endpoints = {}
     if configuration['endpoints'] and (next(configuration['endpoints']) ~= nil) then
         for _, endpoint_configuration in ipairs(configuration['endpoints']) do
-            local endpoint = EndpointConfiguration.new(endpoint_configuration):get_endpoint()
+            local endpoint_configuration = EndpointConfiguration.new(endpoint_configuration)
+            local endpoint = HttpEndpoint.new(endpoint_configuration)
             table.insert(self.endpoints, endpoint)
         end
     end

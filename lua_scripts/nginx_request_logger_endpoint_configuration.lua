@@ -1,6 +1,5 @@
 local HttpRequestElementConfiguration = require("nginx_request_logger_http_request_element_configuration")
 local HttpResponseElementConfiguration = require("nginx_request_logger_http_response_element_configuration")
-local HttpEndpoint = require("nginx_request_logger_http_endpoint")
 
 -- Read endpoint configuration
 local EndpointConfiguration = {}
@@ -60,10 +59,6 @@ function EndpointConfiguration.process_configuration(self, configuration, elemen
         table.insert(elements, element_configuration)
     end
     return elements
-end
-
-function EndpointConfiguration.get_endpoint(self)
-    return HttpEndpoint.new(self)
 end
 
 return EndpointConfiguration

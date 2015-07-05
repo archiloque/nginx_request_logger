@@ -1,3 +1,5 @@
+local NginxRequestLoggerHelper = require("nginx_request_logger_helper")
+
 -- Read response element configuration
 local HttpResponseElementConfiguration = {}
 HttpResponseElementConfiguration.__index = HttpResponseElementConfiguration
@@ -24,7 +26,7 @@ function HttpResponseElementConfiguration.read_element_type(self, response_eleme
     local response_type = response_element_configuration.type
     if response_type then
         if valid_response_types[response_type] == nill then
-            error("Unknown type [" .. response_type .. "] valid values are " .. table.concat(valid_response_types, " ") .. " for response " .. self.name)
+            error("Unknown type [" .. response_type .. "] valid values are " .. NginxRequestLoggerHelper.concat_table_keys(valid_response_types, " ") .. " for response " .. self.name)
         end
         return response_type
     else
@@ -33,8 +35,13 @@ function HttpResponseElementConfiguration.read_element_type(self, response_eleme
 end
 
 function HttpResponseElementConfiguration.read_response_element_configuration(self, endpoint_configuration, response_element_configuration)
+    local response_type = self.type
     if response_type == "header" then
         self:read_header(response_element_configuration)
+    elseif response_type == "json_body" then
+        self:read_json_body(response_element_configuration)
+    else
+        error("Unknown response type [" .. response_type .. "]")
     end
 end
 
@@ -46,6 +53,10 @@ end
 
 function HttpResponseElementConfiguration.read_header(self, response_element_configuration)
     self:error_if_response_param_is_missing(response_element_configuration, "header_name")
+end
+
+function HttpResponseElementConfiguration.read_json_body(self, response_element_configuration)
+    self:error_if_response_param_is_missing(response_element_configuration, "path")
 end
 
 return HttpResponseElementConfiguration

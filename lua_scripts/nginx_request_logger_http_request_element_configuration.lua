@@ -1,3 +1,5 @@
+local NginxRequestLoggerHelper = require("nginx_request_logger_helper")
+
 -- Read request element configuration
 local HttpRequestElementConfiguration = {}
 HttpRequestElementConfiguration.__index = HttpRequestElementConfiguration
@@ -24,7 +26,7 @@ function HttpRequestElementConfiguration.read_element_type(self, request_element
     local request_type = request_element_configuration.type
     if request_type then
         if valid_request_types[request_type] == nill then
-            error("Unknown type [" .. endpoint_type .. "] valid values are " .. table.concat(valid_request_types, " ") .. " for request " .. self.name)
+            error("Unknown type [" .. request_type .. "] valid values are " .. NginxRequestLoggerHelper.concat_table_keys(valid_request_types, " ") .. " for request " .. self.name)
         end
         return request_type
     else
@@ -33,7 +35,8 @@ function HttpRequestElementConfiguration.read_element_type(self, request_element
 end
 
 function HttpRequestElementConfiguration.read_request_element_configuration(self, endpoint_configuration, request_element_configuration)
-    if self.type == "uri_regex" then
+    local request_type = self.type
+    if request_type == "uri_regex" then
         self:read_uri_regex(endpoint_configuration, request_element_configuration)
     elseif request_type == "post_arg" then
         self:read_post_arg(request_element_configuration)
@@ -43,6 +46,8 @@ function HttpRequestElementConfiguration.read_request_element_configuration(self
         self:read_query(request_element_configuration)
     elseif request_type == "header" then
         self:read_header(request_element_configuration)
+    else
+        error("Unknown request type [" .. request_type .. "]")
     end
 end
 
