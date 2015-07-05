@@ -1,6 +1,8 @@
 # Nginx request logger
 
-Lua code to log request information in Nginx. For each URL you can specify witch parameter and reponse values to logs.
+Lua code to log request information in Nginx. For each URL you can specify witch parameter and response values to logs.
+
+Rely on Nginx's [ability](http://wiki.nginx.org/HttpLuaModule) to run embeded Lua code.
 
 This code should not be used as a final product but as a base to hack on.  
 
