@@ -92,7 +92,7 @@ function NginxRequestLogger.after_call(self)
         if ngx.ctx.buffered_content then
             response_body = table.concat(ngx.ctx.buffered_content)
         end
-        local after_call_result = endpoint:process_after_call(ngx.resp.get_headers(), response_body)
+        local after_call_result = endpoint:process_after_call(ngx, response_body)
 
         local message = "Service logging "
         if ngx.ctx.correlation_id then

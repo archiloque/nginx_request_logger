@@ -246,10 +246,11 @@ function TestHttpEndpoint:testRequestUriRegex()
     local req = mockagne.getMock()
     when(req.get_uri_args()).thenAnswer({})
     when(req.get_post_args()).thenAnswer({})
+    when(req.get_headers()).thenAnswer({})
     local ngx = { req = req, var = { request_body = "" } }
 
     local http_endpoint = HttpEndpoint.new(endpoint_configuration)
-    luaunit.assertEquals({ request_name = "12" }, http_endpoint:process_before_call(ngx, { "", "12" }, {}, ngx))
+    luaunit.assertEquals({ request_name = "12" }, http_endpoint:process_before_call(ngx, { "", "12" }))
 
     local endpoint_configuration = EndpointConfiguration.new({
         name = "endpoint_name",
@@ -263,10 +264,11 @@ function TestHttpEndpoint:testRequestUriRegex()
     local req = mockagne.getMock()
     when(req.get_uri_args()).thenAnswer({})
     when(req.get_post_args()).thenAnswer({})
+    when(req.get_headers()).thenAnswer({})
     local ngx = { req = req, var = { request_body = "" } }
 
     local http_endpoint = HttpEndpoint.new(endpoint_configuration)
-    luaunit.assertEquals({}, http_endpoint:process_before_call(ngx, { "", "12" }, {}, nil))
+    luaunit.assertEquals({}, http_endpoint:process_before_call(ngx, { "", "12" }))
 end
 
 function TestHttpEndpoint:testRequestPostArg()
@@ -300,7 +302,7 @@ function TestHttpEndpoint:testRequestPostArg()
     local ngx = { req = req, var = { request_body = "" } }
 
     local http_endpoint = HttpEndpoint.new(endpoint_configuration)
-    luaunit.assertEquals({}, http_endpoint:process_before_call(ngx, nil, {}, nil))
+    luaunit.assertEquals({}, http_endpoint:process_before_call(ngx, nil))
 end
 
 function TestHttpEndpoint:testRequestJsonBodyOk()
@@ -336,7 +338,6 @@ function TestHttpEndpoint:testRequestJsonBodyNoContentType()
     local req = mockagne.getMock()
     when(req.get_uri_args()).thenAnswer({})
     when(req.get_post_args()).thenAnswer({})
-    local headers = {}
     when(req.get_headers()).thenAnswer({})
     local ngx = { req = req, var = { request_body = "{\"plop\": \"plap\"}" } }
 
@@ -365,5 +366,128 @@ function TestHttpEndpoint:testRequestJsonBodyInvalid()
     luaunit.assertEquals({}, http_endpoint:process_before_call(ngx, nil))
 end
 
+function TestHttpEndpoint:testRequestHeader()
+    local endpoint_configuration = EndpointConfiguration.new({
+        name = "endpoint_name",
+        uri = "/service",
+        request = {
+            { name = "request_name", type = "header", header_name = "my_header" }
+        }
+    })
+
+    local req = mockagne.getMock()
+    when(req.get_uri_args()).thenAnswer({})
+    when(req.get_post_args()).thenAnswer({})
+    when(req.get_headers()).thenAnswer({ my_header = "header_value" })
+    local ngx = { req = req, var = { request_body = "" } }
+
+    local http_endpoint = HttpEndpoint.new(endpoint_configuration)
+    luaunit.assertEquals({ request_name = "header_value" }, http_endpoint:process_before_call(ngx, nil))
+
+    local endpoint_configuration = EndpointConfiguration.new({
+        name = "endpoint_name",
+        uri = "/service",
+        request = {
+            { name = "request_name", type = "header", header_name = "my_header" }
+        }
+    })
+
+    local req = mockagne.getMock()
+    when(req.get_uri_args()).thenAnswer({})
+    when(req.get_post_args()).thenAnswer({})
+    when(req.get_headers()).thenAnswer({})
+    local ngx = { req = req, var = { request_body = "" } }
+
+    local http_endpoint = HttpEndpoint.new(endpoint_configuration)
+    luaunit.assertEquals({}, http_endpoint:process_before_call(ngx, nil))
+end
+
+
+function TestHttpEndpoint:testResponseJsonBodyOk()
+    local endpoint_configuration = EndpointConfiguration.new({
+        name = "endpoint_name",
+        uri = "/service",
+        response = {
+            { name = "response_name", type = "json_body", path = "plop" }
+        }
+    })
+
+    local resp = mockagne.getMock()
+    local headers = {}
+    headers["Content-Type"] = "application/json"
+    when(resp.get_headers()).thenAnswer(headers)
+    local ngx = { resp = resp }
+
+    local http_endpoint = HttpEndpoint.new(endpoint_configuration)
+    luaunit.assertEquals({ response_name = "plap" }, http_endpoint:process_after_call(ngx, "{\"plop\": \"plap\"}"))
+end
+
+function TestHttpEndpoint:testResponseJsonBodyNoContentType()
+    local endpoint_configuration = EndpointConfiguration.new({
+        name = "endpoint_name",
+        uri = "/service",
+        response = {
+            { name = "response_name", type = "json_body", path = "plop" }
+        }
+    })
+
+    local resp = mockagne.getMock()
+    when(resp.get_headers()).thenAnswer({})
+    local ngx = { resp = resp }
+
+    local http_endpoint = HttpEndpoint.new(endpoint_configuration)
+    luaunit.assertEquals({}, http_endpoint:process_after_call(ngx, "{\"plop\": \"plap\"}"))
+end
+
+function TestHttpEndpoint:testResponseJsonBodyInvalid()
+    local endpoint_configuration = EndpointConfiguration.new({
+        name = "endpoint_name",
+        uri = "/service",
+        response = {
+            { name = "response_name", type = "json_body", path = "plop" }
+        }
+    })
+
+    local resp = mockagne.getMock()
+    local headers = {}
+    headers["Content-Type"] = "application/json"
+    when(resp.get_headers()).thenAnswer(headers)
+    local ngx = { resp = resp }
+
+    local http_endpoint = HttpEndpoint.new(endpoint_configuration)
+    luaunit.assertEquals({}, http_endpoint:process_after_call(ngx, "{\"pl"))
+end
+
+function TestHttpEndpoint:testResponseHeader()
+    local endpoint_configuration = EndpointConfiguration.new({
+        name = "endpoint_name",
+        uri = "/service",
+        response = {
+            { name = "response_name", type = "header", header_name = "my_header" }
+        }
+    })
+
+    local resp = mockagne.getMock()
+    when(resp.get_headers()).thenAnswer({ my_header = "header_value" })
+    local ngx = { resp = resp }
+
+    local http_endpoint = HttpEndpoint.new(endpoint_configuration)
+    luaunit.assertEquals({ response_name = "header_value" }, http_endpoint:process_after_call(ngx, nil))
+
+    local endpoint_configuration = EndpointConfiguration.new({
+        name = "endpoint_name",
+        uri = "/service",
+        response = {
+            { name = "response_name", type = "header", header_name = "my_header" }
+        }
+    })
+
+    local resp = mockagne.getMock()
+    when(resp.get_headers()).thenAnswer({})
+    local ngx = { resp = resp }
+
+    local http_endpoint = HttpEndpoint.new(endpoint_configuration)
+    luaunit.assertEquals({}, http_endpoint:process_after_call(ngx, nil))
+end
 
 os.exit(luaunit.LuaUnit.run())

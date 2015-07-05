@@ -162,8 +162,9 @@ function HttpEndpoint.process_before_call(self, ngx, match_result)
     end
 end
 
-function HttpEndpoint.process_after_call(self, headers, response_body)
+function HttpEndpoint.process_after_call(self, ngx, response_body)
     if self.response then
+        local headers = ngx.resp.get_headers()
         local values = { headers = headers }
         if self.need_response_body then
             self:add_json_body(headers, response_body, values)
