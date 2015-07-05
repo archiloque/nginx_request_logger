@@ -40,7 +40,7 @@ end
 -- read the content of a file, used for the configuration
 function NginxRequestLogger.read_file(file)
     local f = io.open(file, "rb")
-    if f == nill then
+    if f == nil then
         error("Configuration file not found at [" .. file .. "]")
     end
     local content = f:read("*all")
@@ -49,16 +49,15 @@ function NginxRequestLogger.read_file(file)
 end
 
 function NginxRequestLogger.before_call(self)
-    local correlation_id = nill
     if self.correlation_id then
-        correlation_id = uuid()
+        local correlation_id = uuid()
         ngx.req.set_header(self.correlation_id, correlation_id)
         ngx.ctx.correlation_id = correlation_id
     end
 
     local endpoint, match_result = self:find_endpoint()
     if endpoint then
-        local before_call_result = endpoint:process_before_call(match_result, ngx.req.get_headers(), ngx.var.request_body)
+        local before_call_result = endpoint:process_before_call(ngx, match_result)
         if before_call_result then
             local message = "Service logging "
             if correlation_id then
@@ -89,7 +88,7 @@ end
 function NginxRequestLogger.after_call(self)
     local endpoint = ngx.ctx.endpoint
     if endpoint then
-        local response_body = nill
+        local response_body
         if ngx.ctx.buffered_content then
             response_body = table.concat(ngx.ctx.buffered_content)
         end

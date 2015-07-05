@@ -7,7 +7,7 @@ HttpRequestElementConfiguration.__index = HttpRequestElementConfiguration
 function HttpRequestElementConfiguration.new(endpoint_configuration, request_element_configuration)
     local self = setmetatable({}, HttpRequestElementConfiguration)
 
-    if request_element_configuration.name == nill then
+    if request_element_configuration.name == nil then
         error("Request without name " .. cjson.encode(request_element_configuration))
     end
     self.name = request_element_configuration.name
@@ -25,7 +25,7 @@ local valid_request_types = {uri_regex = true, post_arg = true, json_body = true
 function HttpRequestElementConfiguration.read_element_type(self, request_element_configuration)
     local request_type = request_element_configuration.type
     if request_type then
-        if valid_request_types[request_type] == nill then
+        if valid_request_types[request_type] == nil then
             error("Unknown type [" .. request_type .. "] valid values are " .. NginxRequestLoggerHelper.concat_table_keys(valid_request_types, " ") .. " for request " .. self.name)
         end
         return request_type

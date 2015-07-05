@@ -70,6 +70,7 @@ WARNING: Currently a work in progress prototype, use at your own risks.
 - Nginx with [HttpLuaModule](http://wiki.nginx.org/HttpLuaModule) and [Nginx Development Kit](https://github.com/simpl/ngx_devel_kit)
 - [uuid](https://github.com/Tieske/uuid)
 - [cjson](http://www.kyne.com.au/~mark/software/lua-cjson.php)
+- [mockagne](https://github.com/PunchWolf/mockagne) for testing
 
 Under OSX if you use Homebrew, you can setup Nginx with :
 

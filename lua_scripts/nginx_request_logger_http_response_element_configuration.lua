@@ -7,7 +7,7 @@ HttpResponseElementConfiguration.__index = HttpResponseElementConfiguration
 function HttpResponseElementConfiguration.new(endpoint_configuration, response_element_configuration)
     local self = setmetatable({}, HttpResponseElementConfiguration)
 
-    if response_element_configuration.name == nill then
+    if response_element_configuration.name == nil then
         error("Response without name " .. cjson.encode(response_element_configuration))
     end
     self.name = response_element_configuration.name
@@ -25,7 +25,7 @@ local valid_response_types = { header = true, json_body = true }
 function HttpResponseElementConfiguration.read_element_type(self, response_element_configuration)
     local response_type = response_element_configuration.type
     if response_type then
-        if valid_response_types[response_type] == nill then
+        if valid_response_types[response_type] == nil then
             error("Unknown type [" .. response_type .. "] valid values are " .. NginxRequestLoggerHelper.concat_table_keys(valid_response_types, " ") .. " for response " .. self.name)
         end
         return response_type

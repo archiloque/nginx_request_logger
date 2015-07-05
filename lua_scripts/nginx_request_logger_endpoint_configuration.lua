@@ -9,12 +9,12 @@ EndpointConfiguration.__index = EndpointConfiguration
 function EndpointConfiguration.new(configuration)
     local self = setmetatable({}, EndpointConfiguration)
 
-    if configuration.name == nill then
+    if configuration.name == nil then
         error("Endpoint without name " .. cjson.encode(configuration))
     end
     self.name = configuration.name
 
-    if configuration.uri == nill then
+    if configuration.uri == nil then
         error("No uri for service " .. self.name)
     end
     self.uri = configuration.uri
@@ -23,11 +23,11 @@ function EndpointConfiguration.new(configuration)
 
     self.http_method = (configuration.http_method or 'GET')
 
-    if configuration.request and (next(configuration.request) ~= nill) then
+    if configuration.request and (next(configuration.request) ~= nil) then
         self.request = self:process_configuration(configuration.request, "request", HttpRequestElementConfiguration)
     end
 
-    if configuration.response and (next(configuration.response) ~= nill) then
+    if configuration.response and (next(configuration.response) ~= nil) then
         self.response = self:process_configuration(configuration.response, "response", HttpResponseElementConfiguration)
     end
 
