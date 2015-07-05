@@ -55,6 +55,13 @@ function json_put_ko(web)
     return cjson.encode({ code = 1 })
 end
 
+function post_ok(web)
+    log(web)
+    web:content_type('text/plain')
+    return "Hello"
+end
+
+
 -- Builds the application's dispatch table, you can
 -- pass multiple patterns, and any captures get passed to
 -- the controller
@@ -66,5 +73,7 @@ example:dispatch_put(json_put_ok, "/json/ok")
 example:dispatch_get(json_get_ko, "/json/ko")
 example:dispatch_post(json_post_ko, "/json/ko")
 example:dispatch_put(json_put_ko, "/json/ko")
+
+example:dispatch_post(post_ok, "/post/ok")
 
 return _M

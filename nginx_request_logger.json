@@ -4,6 +4,23 @@
 
   "endpoints": [
     {
+      "name": "post_ok",
+      "uri": "/post/ok",
+      "http_method": "POST",
+      "request": [
+        {
+          "name": "param1",
+          "type": "post_arg",
+          "parameter_name": "param1"
+        },
+        {
+          "name": "param3",
+          "type": "query",
+          "parameter_name": "param3"
+        }
+      ]
+    },
+    {
       "name": "post_json_ok",
       "uri": "/json/ok",
       "http_method": "POST",

@@ -90,7 +90,7 @@ function HttpEndpoint.process_response_configuration(self, reponse_configuration
 end
 
 function HttpEndpoint.create_uri_regex_request_function(self, request_configuration_element)
-    local match_index = request_configuration_element["match_index"] + 1
+    local match_index = request_configuration_element.match_index + 1
     return function(arguments)
         return arguments.match_result[match_index]
     end
@@ -98,7 +98,7 @@ end
 
 
 function HttpEndpoint.create_post_arg_request_function(self, request_configuration_element)
-    local parameter_name = request_configuration_element["parameter_name"]
+    local parameter_name = request_configuration_element.parameter_name
     return function(arguments)
         local args, _ = ngx.req.get_post_args()
         if args then
@@ -110,7 +110,7 @@ function HttpEndpoint.create_post_arg_request_function(self, request_configurati
 end
 
 function HttpEndpoint.create_json_body_param_function(self, param_configuration_element)
-    local path = param_configuration_element["path"]
+    local path = param_configuration_element.path
     return function(arguments)
         if arguments.json_body then
             return arguments.json_body[path]
@@ -121,7 +121,9 @@ function HttpEndpoint.create_json_body_param_function(self, param_configuration_
 end
 
 function HttpEndpoint.create_query_request_function(self, request_configuration_element)
+    local parameter_name = request_configuration_element.parameter_name
     return function(arguments)
+        return arguments.uri_args[parameter_name]
     end
 end
 
@@ -152,7 +154,8 @@ function HttpEndpoint.process_before_call(self, match_result, headers, request_b
         local values = {
             headers = headers,
             match_result = match_result,
-            request_body = request_body
+            request_body = request_body,
+            uri_args = ngx.req.get_uri_args()
         }
         if self.need_request_body_json then
             self:add_json_body(headers, request_body, values)
