@@ -108,7 +108,13 @@ function HttpEndpoint.create_json_body_param_function(self, param_configuration_
     local path = param_configuration_element.path
     return function(arguments)
         if arguments.json_body then
-            return arguments.json_body[path]
+            local current_body_part = arguments.json_body
+            for _, current_key in ipairs(path) do
+                if current_body_part then
+                    current_body_part = current_body_part[current_key]
+                end
+            end
+            return current_body_part
         else
             return nil
         end

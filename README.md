@@ -14,8 +14,24 @@ Example :
 {
   "correlationId": "X-Correlation-Id",
   "forceCorrelationId": false,
-
   "endpoints": [
+    {
+      "name": "post_ok",
+      "uri": "/post/ok",
+      "http_method": "POST",
+      "request": [
+        {
+          "name": "param1",
+          "type": "post_arg",
+          "parameter_name": "param1"
+        },
+        {
+          "name": "param3",
+          "type": "query",
+          "parameter_name": "param3"
+        }
+      ]
+    },
     {
       "name": "post_json_ok",
       "uri": "/json/ok",
@@ -24,7 +40,9 @@ Example :
         {
           "name": "key_name",
           "type": "json_body",
-          "path": "key"
+          "path": [
+            "key"
+          ]
         },
         {
           "name": "special_header",
@@ -35,7 +53,9 @@ Example :
       "response": [
         {
           "name": "code_name",
-          "path": "code",
+          "path": [
+            "code"
+          ],
           "type": "json_body"
         }
       ]

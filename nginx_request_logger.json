@@ -1,7 +1,6 @@
 {
   "correlationId": "X-Correlation-Id",
   "forceCorrelationId": false,
-
   "endpoints": [
     {
       "name": "post_ok",
@@ -28,7 +27,9 @@
         {
           "name": "key_name",
           "type": "json_body",
-          "path": "key"
+          "path": [
+            "key"
+          ]
         },
         {
           "name": "special_header",
@@ -39,11 +40,12 @@
       "response": [
         {
           "name": "code_name",
-          "path": "code",
+          "path": [
+            "code"
+          ],
           "type": "json_body"
         }
       ]
-
     },
     {
       "name": "post_json_get",
